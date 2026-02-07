@@ -6,8 +6,11 @@ services:
     name: gwenpanget-dashboard
     env: python
     plan: free
-    region: oregon   # or pick your preferred region
-    buildCommand: pip install --upgrade pip && pip install -r requirements.txt
+    region: oregon
+    pythonVersion: "3.11"
+    buildCommand: |
+      pip install --upgrade pip setuptools wheel
+      pip install -r requirements.txt
     startCommand: gunicorn app:app
     autoDeploy: true
     envVars:
