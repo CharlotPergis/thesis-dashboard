@@ -7,8 +7,35 @@ import os
 
 app = Flask(__name__)
 
-# Database path
-DB_FILE = os.path.join(os.path.dirname(__file__), "logs", "system_log.db")
+# --------------------------
+# Database setup
+# --------------------------
+DB_DIR = os.path.join(os.path.dirname(__file__), "logs")
+DB_FILE = os.path.join(DB_DIR, "system_log.db")
+
+# Create folder if not exists
+os.makedirs(DB_DIR, exist_ok=True)
+
+# Create table if not exists
+def init_db():
+    conn = sqlite3.connect(DB_FILE)
+    c = conn.cursor()
+    c.execute("""
+        CREATE TABLE IF NOT EXISTS system_log (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            Timestamp TEXT,
+            Itotal REAL,
+            Tbreaker REAL,
+            ThermalSlope REAL,
+            TimeAboveRated INTEGER,
+            TimeTempRising INTEGER,
+            PredictedState TEXT
+        )
+    """)
+    conn.commit()
+    conn.close()
+
+init_db()  # Initialize DB on startup
 
 # --------------------------
 # Helper function to get latest readings
